@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(tableName = "entry_table")
@@ -14,7 +13,7 @@ data class Entry(
     @ColumnInfo(name = "name") val supplierName: String,
     @ColumnInfo(name = "received") val received: Long,
     @ColumnInfo(name = "paid") val paid: Long,
-    @ColumnInfo(name = "date") val date: String
+    @ColumnInfo(name = "date") val date: Date?
 )
 
 fun Entry.getFormattedReceivedPrice(): String =

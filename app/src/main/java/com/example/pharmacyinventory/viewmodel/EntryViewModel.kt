@@ -25,7 +25,7 @@ class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
     val getLastPurchase: LiveData<Entry> = repository.getLastPurchase.asLiveData()
 
     fun insert(
-        name: String, received: Long, paid: Long, date: String
+        name: String, received: Long, paid: Long, date: Date?
     ) {
         val entry = Entry(
             supplierName = name, received = received, paid = paid, date = date
@@ -36,7 +36,7 @@ class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
     }
 
     fun update(
-        id: Long, name: String, received: Long, paid: Long, date: String
+        id: Long, name: String, received: Long, paid: Long, date: Date?
     ) {
         val entry = Entry(
             id = id, supplierName = name, received = received, paid = paid, date = date

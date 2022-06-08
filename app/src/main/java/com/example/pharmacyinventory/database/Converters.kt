@@ -1,11 +1,8 @@
 package com.example.pharmacyinventory.database
 
-import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
-import java.text.SimpleDateFormat
 import java.util.*
 
-@ProvidedTypeConverter
 class Converters {
 
     @TypeConverter fun fromTimestamp(value: Long?): Date? {

@@ -1,18 +1,13 @@
 package com.example.pharmacyinventory.adapters
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pharmacyinventory.databinding.ItemSupplierCashReportBinding
 import com.example.pharmacyinventory.model.Entry
-import com.example.pharmacyinventory.ui.SupplierCashReportFragment
-import com.example.pharmacyinventory.viewmodel.EntryViewModel
 
 class SupplierCashReportAdapter(
     private val clickListener: (Entry) -> Unit
@@ -59,14 +54,14 @@ class SupplierCashReportAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SupplierCashReportAdapter.SupplierCashReportViewHolder {
+    ): SupplierCashReportViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return SupplierCashReportAdapter.SupplierCashReportViewHolder(
+        return SupplierCashReportViewHolder(
             ItemSupplierCashReportBinding.inflate(layoutInflater, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: SupplierCashReportAdapter.SupplierCashReportViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SupplierCashReportViewHolder, position: Int) {
         val entry = getItem(position)
         holder.itemView.setOnClickListener {
             clickListener(entry)

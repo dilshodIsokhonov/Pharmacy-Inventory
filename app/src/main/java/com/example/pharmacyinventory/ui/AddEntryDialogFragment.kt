@@ -2,6 +2,7 @@ package com.example.pharmacyinventory.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.pharmacyinventory.model.Entry
 import com.example.pharmacyinventory.viewmodel.EntryViewModel
 import com.example.pharmacyinventory.viewmodel.EntryViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,8 +61,8 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
                 deleteEntry(entry)
             }
         } else {
-            val calendar = Calendar.getInstance()
-            binding.dateText.text = SimpleDateFormat("d MMM yyyy E", Locale.getDefault()).format(calendar.time)
+//            val calendar = Calendar.getInstance()
+//            binding.dateText.text = SimpleDateFormat("d MMM yyyy E", Locale.getDefault()).format(calendar.time)
             binding.saveButton.setOnClickListener {
                 dismiss()
                 insertEntry()
@@ -78,7 +80,7 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
         }
         showDatePickerDialog()
         viewModel.date.observe(this.viewLifecycleOwner) {
-            binding.dateText.text = it.toString()
+            binding.dateText.text = it
         }
     }
 
@@ -96,6 +98,7 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
 
     private fun insertEntry() {
         if (isValidEntry()) {
+            val dateTextView = binding.dateText.text.toString()
             viewModel.insert(
                 name = binding.supplierNameInput.text.toString(),
                 received = if (binding.receivedInput.text!!.trim()
@@ -104,7 +107,7 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
                 paid = if (binding.paidInput.text!!.trim()
                         .isNotEmpty()
                 ) binding.paidInput.text.toString().toLong() else 0,
-                date = binding.dateText.text.toString()
+                date = convertDateFormat(dateTextView)
             )
 
         }
@@ -112,6 +115,7 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
 
     private fun updateEntry() {
         if (isValidEntry()) {
+            val dateTextView = binding.dateText.text.toString()
             viewModel.update(
                 id = navigationArgs.id,
                 name = binding.supplierNameInput.text.toString(),
@@ -121,7 +125,7 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
                 paid = if (binding.paidInput.text!!.trim()
                         .isNotEmpty()
                 ) binding.paidInput.text.toString().toLong() else 0,
-                date = binding.dateText.text.toString()
+                date = convertDateFormat(dateTextView)
             )
         }
     }
@@ -131,7 +135,9 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
             supplierNameInput.setText(entry!!.supplierName, TextView.BufferType.SPANNABLE)
             paidInput.setText(entry.paid.toString(), TextView.BufferType.SPANNABLE)
             receivedInput.setText(entry.received.toString(), TextView.BufferType.SPANNABLE)
-            dateText.setText(entry.date.toString(), TextView.BufferType.SPANNABLE)
+            dateText.setText(entry.date?.let {
+                SimpleDateFormat("d MMM yyyy E", Locale.getDefault()).format(it)
+            }, TextView.BufferType.SPANNABLE)
             saveButton.setOnClickListener {
                 dismiss()
                 updateEntry()
@@ -139,6 +145,17 @@ class AddEntryDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun convertDateFormat(data: String): Date? {
+        try {
+            val simpleDateFormat = SimpleDateFormat("d MMM yyyy E", Locale.getDefault())
+            val date: Date? = simpleDateFormat.parse(data)
+            Log.d("TAG", "test==>$date")
+            return date
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
 
     private fun isValidEntry() = viewModel.isValidEntry(
         binding.supplierNameInput.text.toString(),

@@ -9,6 +9,8 @@ import com.example.pharmacyinventory.databinding.ItemSupplierEntryBinding
 import com.example.pharmacyinventory.model.Entry
 import com.example.pharmacyinventory.model.getFormattedPaidPrice
 import com.example.pharmacyinventory.model.getFormattedReceivedPrice
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SupplierEntryAdapter(
     private val onLongClickListener: (Entry) -> Unit
@@ -28,7 +30,11 @@ class SupplierEntryAdapter(
             } else {
                 binding.received.visibility = View.GONE
             }
-            binding.date.text = entry.date.toString()
+            binding.date.text = entry.date?.let {
+                SimpleDateFormat("d MMM yyyy E", Locale.getDefault()).format(
+                    it
+                )
+            }
         }
     }
 

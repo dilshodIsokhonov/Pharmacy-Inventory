@@ -16,10 +16,10 @@ interface EntryDao {
     @Query("SELECT * FROM entry_table GROUP BY name ORDER BY name LIMIT 1")
     fun getSuppliersByName(): Flow<List<Entry>>
 
-    @Query("SELECT * FROM entry_table ORDER BY date ASC")
+    @Query("SELECT * FROM entry_table ORDER BY date DESC")
     fun getFullEntries(): Flow<List<Entry>>
 
-    @Query("SELECT * FROM entry_table WHERE name IN (:name) ORDER BY date ASC")
+    @Query("SELECT * FROM entry_table WHERE name IN (:name) ORDER BY date DESC")
     fun getSupplierEntries(name: String): Flow<List<Entry>>
 
     @Query("SELECT SUM(paid) FROM entry_table WHERE name IN (:name)")
@@ -34,7 +34,7 @@ interface EntryDao {
     @Query("DELETE FROM entry_table")
     suspend fun deleteAll()
 
-    @Insert()
+    @Insert
     suspend fun insert(vararg entry: Entry)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
